@@ -24,8 +24,8 @@ function App() {
     try {
       setUserInputs(prev => [...prev, prompt]);
       const response = await axios.post('https://intelli-chat-server.vercel.app/', { prompt: prompt });
-      console.log(response.data);
-      setButtonText('Wait');
+   //   console.log(response.data);
+      setButtonText('⏳');
       setPrompt('');
       let i = 0;
       let currentResult = '';
