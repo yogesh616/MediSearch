@@ -11,6 +11,9 @@ function App() {
   const [check, setCheck] = useState(0);
   const divRef = useRef(null);
   const [btnText, setButtonText] = useState('Send')
+  const [images, setImages] = useState([]);
+  const [hyperlinks, setHyperlinks] = useState([]);
+  
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -24,14 +27,17 @@ function App() {
     try {
       setUserInputs(prev => [...prev, prompt]);
       const response = await axios.post('https://intelli-chat-server.vercel.app/', { prompt: prompt });
-   //   console.log(response.data);
-      setButtonText('⏳');
+     // console.log(response.data);
+      setButtonText('Wait');
       setPrompt('');
       let i = 0;
       let currentResult = '';
+      const textData = response.data.longestData
+      const imagedata = response.data.yahooSummary.src
+      const hyperlinkData = response.data.yahooSummary.href
       function type() {
-        if (i < response.data.longestData.length) {
-          currentResult += response.data.longestData.charAt(i);
+        if (i < textData.length) {
+          currentResult += textData.charAt(i);
           setResults(prev => {
             const newResults = [...prev];
             newResults[check] = currentResult;
@@ -42,6 +48,19 @@ function App() {
         }
         else{
           setButtonText('Send');
+          setImages((prev) => {
+            const newImages = [...prev];
+            newImages[check] = imagedata;
+           // console.log('new images', newImages);
+            return newImages;
+          })
+          setHyperlinks((prev) => {
+            const newHyperLinks = [...prev];
+            newHyperLinks[check] = hyperlinkData;
+           // console.log('new hyperlinks', newHyperLinks);
+            return newHyperLinks;
+
+          })
         }
       }
       type();
@@ -76,6 +95,8 @@ function App() {
             </div>
             <div className="result">
               <p className="result-text">{result}</p>
+              
+              {hyperlinks[index] && images[index] &&  <a href={hyperlinks[index]} target='_blank' ><img className="img" src={images[index]} alt="Result" /> </a>}
             </div>
           </div>
         ))}
