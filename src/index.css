@@ -4,3 +4,10 @@ body {
   height: 100vh;
   color: #fff;
 }
+
+.img, a {
+  max-width: 210px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 15px;
+}
