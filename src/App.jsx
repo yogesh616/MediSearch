@@ -30,7 +30,7 @@ function App() {
   async function getData() {
     try {
       setUserInputs(prev => [...prev, prompt]);
-      const response = await axios.post('http://localhost:7000/', { prompt: prompt });
+      const response = await axios.post('https://intelli-chat-server.vercel.app/', { prompt: prompt });
       console.log(response.data);
       setButtonText('Wait');
       setPrompt('');
