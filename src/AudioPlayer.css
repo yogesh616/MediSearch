@@ -1,0 +1,61 @@
+/* AudioPlayer.css */
+.rhap_theme-color {
+    background-color: #4caf50; /* Change the theme color */
+  }
+  
+  .rhap_background-color {
+    background-color: #ffffff; /* Change player background color */
+  }
+  
+  .rhap_bar-color {
+    background-color: #e4e4e4; /* Change the volume and progress bar color */
+  }
+  
+  .rhap_time-color {
+    color: #e6dee9; /* Change font color for current time and duration */
+    font-family: 'Arial', sans-serif; /* Change font family */
+  }
+  
+  /* Overwrite the progress bar style while the audio is paused */
+  .rhap_play-status--paused .rhap_progress-bar {
+    background-color: #fcb69f;
+    background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%); /* Change the progress bar color when paused */
+  }
+  
+  /* Overwrite the volume bar color */
+  .rhap_volume-bar {
+    background-color: #ffa500; /* Change the volume bar color */
+  }
+  
+  /* Style the play button when playing */
+  .rhap_play-status--playing .rhap_play-button {
+    color: #242424; /* Change color when playing */
+  }
+  
+  /* Style the loop button */
+  .rhap_loop--on {
+    background-color: #3f51b5; /* Change loop button background when on */
+  }
+  
+  .rhap_loop--off {
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%); /* Change loop button background when off */
+  }
+  
+  .rhap_progress-filled {
+    background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
+  }
+  .rhap_progress-indicator {
+    background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 50%);
+  }
+  .rhap_container {
+    max-width: 400px;
+    border-radius: 15px;
+  }
+
+  @media (max-width: 767px) {
+    /* For smaller screens, make the player container smaller */
+   .rhap_container {
+     max-width: 300px;
+     border-radius: 15px;
+   }
+  }

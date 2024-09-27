@@ -3,6 +3,9 @@ import './App.css';
 import axios from 'axios';
 import Lottie from 'react-lottie';
 import logo from './assets/lottie.json';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
+import './AudioPlayer.css'
 
 function App() {
   const [prompt, setPrompt] = useState('');
@@ -13,6 +16,7 @@ function App() {
   const [btnText, setButtonText] = useState('Send')
   const [images, setImages] = useState([]);
   const [hyperlinks, setHyperlinks] = useState([]);
+  const [audioUrl, setAudioUrl] = useState([]);
   
   const defaultOptions = {
     loop: true,
@@ -26,8 +30,8 @@ function App() {
   async function getData() {
     try {
       setUserInputs(prev => [...prev, prompt]);
-      const response = await axios.post('https://intelli-chat-server.vercel.app/', { prompt: prompt });
-     // console.log(response.data);
+      const response = await axios.post('http://localhost:7000/', { prompt: prompt });
+      console.log(response.data);
       setButtonText('Wait');
       setPrompt('');
       let i = 0;
@@ -35,6 +39,8 @@ function App() {
       const textData = response.data.longestData
       const imagedata = response.data.yahooSummary.src
       const hyperlinkData = response.data.yahooSummary.href
+      const audiourl = response.data.audioURL
+
       function type() {
         if (i < textData.length) {
           currentResult += textData.charAt(i);
@@ -59,6 +65,13 @@ function App() {
             newHyperLinks[check] = hyperlinkData;
            // console.log('new hyperlinks', newHyperLinks);
             return newHyperLinks;
+
+          })
+          setAudioUrl((prev) => {
+            const newAudioUrl = [...prev];
+            newAudioUrl[check] = audiourl;
+           // console.log('new hyperlinks', newHyperLinks);
+            return newAudioUrl;
 
           })
         }
@@ -88,6 +101,7 @@ function App() {
     <div className="app-container">
       <div ref={divRef} className="results-container">
       <Lottie options={defaultOptions} width={55} height={55} />
+      
         {results.map((result, index) => (
           <div  className="result-item" key={index}>
             <div className="user-input">
@@ -95,7 +109,9 @@ function App() {
             </div>
             <div className="result">
               <p className="result-text">{result}</p>
-              
+              {audioUrl[index] && <AudioPlayer src={audioUrl[index]} />}
+
+                
               {hyperlinks[index] && images[index] &&  <a href={hyperlinks[index]} target='_blank' ><img className="img" src={images[index]} alt="Result" /> </a>}
             </div>
           </div>
