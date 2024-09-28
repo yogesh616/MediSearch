@@ -69,7 +69,8 @@
     outline: none;
     background: transparent;
     border-radius: 25px;
-    color: #e0e0e0
+    color: #e0e0e0;
+    width: 85%;
   }
   
   .send-button {
