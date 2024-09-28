@@ -6,6 +6,7 @@ import logo from './assets/lottie.json';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import './AudioPlayer.css'
+import './popup.css'
 
 function App() {
   const [prompt, setPrompt] = useState('');
@@ -17,6 +18,21 @@ function App() {
   const [images, setImages] = useState([]);
   const [hyperlinks, setHyperlinks] = useState([]);
   const [audioUrl, setAudioUrl] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+ 
+  
+function handleOpen() {
+  setIsOpen(true);
+  console.log(isOpen)
+}
+function handleClose() {
+  setIsOpen(false);
+  console.log(isOpen)
+}
+
+
+
+
   
   const defaultOptions = {
     loop: true,
@@ -132,8 +148,25 @@ function App() {
         </button>
       </div>
       <div className='text-center mb-1'> 
-         <p className='text-secondary my-2 opacity-75 info'>IntelliChat can make mistakes. Check important info.</p>
+         <p className='text-secondary my-2 opacity-75 info'>IntelliChat can make mistakes. <span style={{cursor: 'pointer'}} onClick={handleOpen} >Check important info. </span></p>
       </div>
+       {/* Popup   */ }
+       {isOpen && (
+        <div className="popup">
+          <div className="popup-content">
+            <span className="close-btn" onClick={handleClose}>
+              &times;
+            </span>
+            <h2>Web Scraper Documentation</h2>
+            <p>To find details for a person, write the name with "<strong>who is or was</strong>".</p>
+            <p>To download a song, write "<strong>songname song mp3 download pagalfree</strong>".</p>
+            <p>
+              <strong>Note:</strong> <em>Pagalfree</em> is important for finding the audio file on the
+              server.
+            </p>
+          </div>
+        </div>
+      )}
      
     </div>
   );
