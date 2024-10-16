@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import './App.css';
 import axios from 'axios';
 import Lottie from 'react-lottie';
@@ -8,32 +8,26 @@ import 'react-h5-audio-player/lib/styles.css';
 import './AudioPlayer.css'
 import './popup.css'
 
-function App() {
+const App = () => {
   const [prompt, setPrompt] = useState('');
   const [userInputs, setUserInputs] = useState([]);
   const [results, setResults] = useState([]);
   const [check, setCheck] = useState(0);
   const divRef = useRef(null);
-  const [btnText, setButtonText] = useState('Send')
+  const [btnText, setButtonText] = useState('Send');
   const [images, setImages] = useState([]);
   const [hyperlinks, setHyperlinks] = useState([]);
   const [audioUrl, setAudioUrl] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
- 
-  
-function handleOpen() {
-  setIsOpen(true);
-  console.log(isOpen)
-}
-function handleClose() {
-  setIsOpen(false);
-  console.log(isOpen)
-}
 
+  const handleOpen = useCallback(() => {
+    setIsOpen(true);
+  }, []);
 
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
 
-
-  
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -43,23 +37,22 @@ function handleClose() {
     }
   };
 
-  async function getData() {
+  const getData = async () => {
     try {
       setUserInputs(prev => [...prev, prompt]);
       const response = await axios.post('https://intelli-chat-server.vercel.app/', { prompt: prompt });
-      console.log(response.data);
       setButtonText('Wait');
       setPrompt('');
-      let i = 0;
+      
+      const { longestData, yahooSummary, audioURL } = response.data;
+      const { src: imageSrc, href: hyperlinkHref } = yahooSummary;
+
       let currentResult = '';
-      const textData = response.data.longestData
-      const imagedata = response.data.yahooSummary.src
-      const hyperlinkData = response.data.yahooSummary.href
-      const audiourl = response.data.audioURL
+      let i = 0;
 
       function type() {
-        if (i < textData.length) {
-          currentResult += textData.charAt(i);
+        if (i < longestData.length) {
+          currentResult += longestData.charAt(i);
           setResults(prev => {
             const newResults = [...prev];
             newResults[check] = currentResult;
@@ -67,73 +60,66 @@ function handleClose() {
           });
           i++;
           setTimeout(type, 20);
-        }
-        else{
+        } else {
           setButtonText('Send');
-          setImages((prev) => {
+          setImages(prev => {
             const newImages = [...prev];
-            newImages[check] = imagedata;
-           // console.log('new images', newImages);
+            newImages[check] = imageSrc;
             return newImages;
-          })
-          setHyperlinks((prev) => {
-            const newHyperLinks = [...prev];
-            newHyperLinks[check] = hyperlinkData;
-           // console.log('new hyperlinks', newHyperLinks);
-            return newHyperLinks;
-
-          })
-          setAudioUrl((prev) => {
+          });
+          setHyperlinks(prev => {
+            const newHyperlinks = [...prev];
+            newHyperlinks[check] = hyperlinkHref;
+            return newHyperlinks;
+          });
+          setAudioUrl(prev => {
             const newAudioUrl = [...prev];
-            newAudioUrl[check] = audiourl;
-           // console.log('new hyperlinks', newHyperLinks);
+            newAudioUrl[check] = audioURL;
             return newAudioUrl;
-
-          })
+          });
         }
       }
+
       type();
       setCheck(prev => prev + 1);
+
     } catch (error) {
-      console.log(error.message);
-      
+      console.error(error.message);
     }
-  }
+  };
 
   const handleKey = (e) => {
     if (e.key === 'Enter') {
       getData();
     }
   };
+
   useEffect(() => {
     if (divRef.current && results.length > 0) {
       divRef.current.scrollTo({ top: divRef.current.scrollHeight, behavior: 'smooth' });
-      
     }
-    
   }, [results]);
 
   return (
     <div className="app-container">
       <div ref={divRef} className="results-container">
-      <Lottie options={defaultOptions} width={55} height={55} />
-      
+        <Lottie options={defaultOptions} width={55} height={55} />
         {results.map((result, index) => (
-          <div  className="result-item" key={index}>
+          <div className="result-item" key={index}>
             <div className="user-input">
               <p className="user-input-text">{userInputs[index]}</p>
             </div>
             <div className="result">
               <p className="result-text">{result}</p>
               {audioUrl[index] && <AudioPlayer src={audioUrl[index]} />}
-
-                
-              {hyperlinks[index] && images[index] &&  <a href={hyperlinks[index]} target='_blank' ><img className="img" src={images[index]} alt="Result" /> </a>}
+              {hyperlinks[index] && images[index] &&
+                <a href={hyperlinks[index]} target='_blank'>
+                  <img className="img" src={images[index]} alt="Result" />
+                </a>}
             </div>
           </div>
         ))}
       </div>
-
       <div className="input-group">
         <input
           type="text"
@@ -147,11 +133,14 @@ function handleClose() {
           {btnText}
         </button>
       </div>
-      <div className='text-center mb-1'> 
-         <p className='text-secondary my-2 opacity-75 info'>IntelliChat can make mistakes. <span style={{cursor: 'pointer'}} onClick={handleOpen} >Check important info. </span></p>
+      <div className='text-center mb-1'>
+        <p className='text-secondary my-2 opacity-75 info'>
+          IntelliChat can make mistakes. <span style={{cursor: 'pointer'}} onClick={handleOpen} >Check important info. </span>
+        </p>
       </div>
-       {/* Popup   */ }
-       {isOpen && (
+
+      {/* Popup */}
+      {isOpen && (
         <div className="popup">
           <div className="popup-content">
             <span className="close-btn" onClick={handleClose}>
@@ -161,15 +150,13 @@ function handleClose() {
             <p>To find details for a person, write the name with "<strong>who is or was</strong>".</p>
             <p>To download a song, write "<strong>songname song mp3 download pagalfree</strong>".</p>
             <p>
-              <strong>Note:</strong> <em>Pagalfree</em> is important for finding the audio file on the
-              server.
+              <strong>Note:</strong> <em>Pagalfree</em> is important for finding the audio file on the server.
             </p>
           </div>
         </div>
       )}
-     
     </div>
   );
-}
+};
 
 export default App;
