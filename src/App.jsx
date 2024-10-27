@@ -19,6 +19,16 @@ const App = () => {
   const [hyperlinks, setHyperlinks] = useState([]);
   const [audioUrl, setAudioUrl] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const inputRef = useRef(null);
+
+  function focusInput() {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }
+  useEffect(() => {
+    focusInput();
+  }, [])
 
   const handleOpen = useCallback(() => {
     setIsOpen(true);
@@ -124,7 +134,7 @@ const App = () => {
 
       </div>
       <div className="input-group">
-        <input
+        <input ref={inputRef}
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
