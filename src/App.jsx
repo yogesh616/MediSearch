@@ -105,20 +105,23 @@ const App = () => {
       <div ref={divRef} className="results-container">
         <Lottie options={defaultOptions} width={55} height={55} />
         {results.map((result, index) => (
-          <div className="result-item" key={index}>
-            <div className="user-input">
-              <p className="user-input-text">{userInputs[index]}</p>
-            </div>
-            <div className="result">
-              <p className="result-text">{result}</p>
-              {audioUrl[index] && <AudioPlayer src={audioUrl[index]} />}
-              {hyperlinks[index] && images[index] &&
-                <a href={hyperlinks[index]} target='_blank'>
-                  <img className="img" src={images[index]} alt="Result" />
-                </a>}
-            </div>
-          </div>
-        ))}
+  <div className="result-item" key={index}>
+    <div className="user-input">
+      <p className="user-input-text">{userInputs[index]}</p>
+    </div>
+    <div className="result">
+      <p className="result-text">{result}</p>
+      {/* Conditionally render AudioPlayer only if audioUrl is defined */}
+      {audioUrl[index] && <AudioPlayer src={audioUrl[index]} />}
+      {hyperlinks[index] && images[index] && (
+        <a href={hyperlinks[index]} target="_blank" rel="noopener noreferrer">
+          <img className="img" src={images[index]} alt="Result" />
+        </a>
+      )}
+    </div>
+  </div>
+))}
+
       </div>
       <div className="input-group">
         <input
