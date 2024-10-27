@@ -112,7 +112,7 @@ const App = () => {
     <div className="result">
       <p className="result-text">{result}</p>
       {/* Conditionally render AudioPlayer only if audioUrl is defined */}
-      {audioUrl[index] && <AudioPlayer src={audioUrl[index]} />}
+      
       {hyperlinks[index] && images[index] && (
         <a href={hyperlinks[index]} target="_blank" rel="noopener noreferrer">
           <img className="img" src={images[index]} alt="Result" />
