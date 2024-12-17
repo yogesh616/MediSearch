@@ -20,6 +20,10 @@ const App = () => {
   const [audioUrl, setAudioUrl] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef(null);
+  const [error, setError] = useState(null);
+
+  const base_url = 'http://localhost:7000/'
+  const prod_url = 'https://intelli-chat-server.vercel.app/'
 
   function focusInput() {
     if (inputRef.current) {
@@ -49,17 +53,24 @@ const App = () => {
 
   const getData = async () => {
     try {
-      setUserInputs(prev => [...prev, prompt]);
-      const response = await axios.post('https://intelli-chat-server.vercel.app/', { prompt: prompt });
+      setUserInputs(prev => [...prev, prompt]); // Add user input instantly to the UI
+      setResults(prev => [...prev, '']); // Reserve space for the result
+      setImages(prev => [...prev, '']);  // Reserve space for the image
+      setHyperlinks(prev => [...prev, '']);  // Reserve space for hyperlink
+      setAudioUrl(prev => [...prev, '']);  // Reserve space for audio URL
+      setCheck(prev => prev + 1);  // Increment check for indexing
+  
       setButtonText('Wait');
-      setPrompt('');
-      
+      const currentPrompt = prompt; // Save current prompt
+      setPrompt(''); // Clear input instantly
+  
+      const response = await axios.post(prod_url, { prompt: currentPrompt });
       const { longestData, yahooSummary, audioURL } = response.data;
       const { src: imageSrc, href: hyperlinkHref } = yahooSummary;
-
+  
       let currentResult = '';
       let i = 0;
-
+  
       function type() {
         if (i < longestData.length) {
           currentResult += longestData.charAt(i);
@@ -89,14 +100,16 @@ const App = () => {
           });
         }
       }
-
+  
       type();
-      setCheck(prev => prev + 1);
-
+  
     } catch (error) {
       console.error(error.message);
+      setError(error.message);
+      setButtonText('Send');
     }
   };
+  
 
   const handleKey = (e) => {
     if (e.key === 'Enter') {
@@ -133,6 +146,14 @@ const App = () => {
 ))}
 
       </div>
+
+      {
+        error && (
+          <div className="error-container">
+            <p className="error-text">{error} <a href='/'>Refresh</a></p>
+          </div>
+        )
+      }
       <div className="input-group">
         <input ref={inputRef}
           type="text"
