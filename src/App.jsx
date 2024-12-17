@@ -175,7 +175,7 @@ const App = () => {
 
       {/* Popup */}
       {isOpen && (
-        <div className="popup">
+        <div className="popup" style={{ display: 'none'}}>
           <div className="popup-content">
             <span className="close-btn" onClick={handleClose}>
               &times;
