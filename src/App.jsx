@@ -163,7 +163,11 @@ useEffect(() => {
     html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
     html = html.replace(/\n/g, '<br />');
     return { __html: html };
-  };
+ };
+  
+
+
+
 
   const getData = useCallback(
     async (currentPrompt) => {
@@ -346,7 +350,7 @@ useEffect(() => {
               createNewConversation();
               closeSideBar();
             }}
-            className="w-full px-4 py-2 text-gray-200  rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 cursor-pointer text-gray-200  rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2"
           >
             <SquarePen size={18} />
             New Chat
@@ -354,7 +358,7 @@ useEffect(() => {
           {conversations.length > 0 && (
             <button
               onClick={deleteAllConversations}
-              className="w-full px-4 py-2 text-gray-200  rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm"
+              className="w-full px-4 py-2 cursor-pointer text-gray-200  rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm"
             >
               <Trash2 size={16} />
               Delete All
@@ -372,21 +376,20 @@ useEffect(() => {
             conversations.map((conv) => (
               <div
                 key={conv.id}
-                className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors group relative ${
+                className={`p-3 mb-2 rounded-lg  transition-colors group relative ${
                   currentConversationId === conv.id
                     ? "bg-gray-700"
                     : "hover:bg-gray-800"
                 }`}
-                onClick={() => {
+               
+              >
+                <div className="flex items-start gap-2 "  >
+                  <SquarePen size={16} className="mt-1 flex-shrink-0" />
+                  <div className="flex-1 min-w-0 " >
+                    <p className="text-sm truncate  cursor-pointer" onClick={() => {
                   setCurrentConversationId(conv.id)
                   closeSideBar();
-
-                }}
-              >
-                <div className="flex items-start gap-2">
-                  <SquarePen size={16} className="mt-1 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm truncate">{conv.title}</p>
+                }}>{conv.title}</p>
                     <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
                       <Clock size={12} />
                       {new Date(conv.timestamp).toLocaleDateString()}
@@ -397,7 +400,7 @@ useEffect(() => {
                       e.stopPropagation();
                       deleteConversation(conv.id);
                     }}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-600 rounded"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-600 rounded cursor-pointer"
                     title="Delete conversation"
                   >
                     <Trash2 size={14} />
@@ -415,7 +418,7 @@ useEffect(() => {
         <div className="h-14 border-b border-gray-700 flex items-center px-4 gap-4 bg-[#1a1a1a]">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
             title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
             {sidebarOpen ? (
@@ -534,7 +537,8 @@ useEffect(() => {
                   );
                 })}
               </div>
-            )}
+            ) 
+             }
 
    <SearchInput
           prompt={prompt}
