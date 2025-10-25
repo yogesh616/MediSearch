@@ -443,11 +443,12 @@ useEffect(() => {
                 🏥
               </div>
               <h2 className="text-2xl font-semibold mb-2">
-                Welcome to Medical Assistant
+                 Welcome to Medical Assistant
               </h2>
               <p className="text-center max-w-md">
-                Start typing to get suggestions and ask about diseases, symptoms, or medical conditions
+                This backend-focused tool provides suggestions and information when you enter exact disease names. It does not handle misspellings or free-form questions like a chatbot or AI model.
               </p>
+
             </div>
           ) : (
             <div className="max-w-4xl mx-auto">
